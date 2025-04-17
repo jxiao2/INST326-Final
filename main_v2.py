@@ -22,7 +22,14 @@ class Card:
         """
         self.suit = suit
         self.value = value
-     
+    
+    def __repr__(self):
+        return f"{self.value} of {self.suit}"
+    
+    def __eq__(self, other):
+        return self.suit == other.suit and self.value == other.value
+
+
    
 class Deck: 
     """A class that describes a deck of 52 playing cards
@@ -112,14 +119,47 @@ class CardGame:
     def deal_cards(self):
         """Steph's part: Deal cards to players hands/deck, and the center."""
         pass
+    
+    def center_swap(self, player, player_card, center_card):
+        """
+        Tanika's part: 
+        Swap one card from player's hand with a card from center.
 
-    def center_swap(self):
-        """Tanika's part: perform swaps and suggest moves"""
-        pass
+        Args:
+            player (Player): the current player
+            player_card (Card): the Card object in the player's hand to swap
+            center_card (Card): the Card object in the center to swap
+
+        Returns:
+            bool:   False if cards requested are invalid, 
+                    True if swap is successful.
+        """
+        if player_card not in player.hand:
+            print(f"{player_card} isn't in {player.name}'s hand")
+            return False
+        else: 
+            hand_index = [i for i in range(len(player.hand)) 
+                        if player.hand[i] == player_card][0]
+
+        if center_card not in self.center_cards:
+            print(f"{center_card} isn't a center card")
+            return False
+        else:
+            center_index = [i for i in range(len(self.center_cards)) 
+                            if self.center_cards[i] == center_card][0]
+
+        # Swap cards
+        temp = player.hand[hand_index]
+        player.hand[hand_index] = self.center_cards[center_index]
+        self.center_cards[center_index] = temp
+
+        return True
+
+
 
     def check_victory(self, player):
         """Ryan's part: check if a player has won (player.completed_decks == 6)"""
-        pass
+    pass
 
     def play_turn(self, player_index):
         """Each turn, player chooses to swap with center or swap deck """
@@ -127,9 +167,8 @@ class CardGame:
     
            
 def main(args):
-    deck = Deck()
-    deck.shuffle() 
-    
+    # deck = Deck() -> added this to init of cardGame
+    # deck.shuffle()  -> added this to init of cardGame
     game = CardGame(args)
     game.deal_cards()
     
