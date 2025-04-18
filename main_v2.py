@@ -89,10 +89,24 @@ class Player:
         self.decks = [[] for _ in range(6)] 
         self.completed_decks = 0
 
-    def swap_with_deck(self, deck_index):
+    def swap_with_deck(self, deck_swap = False, card_swap = False, 
+                      deck_num = None, card_num1 = None, card_num2 = None, 
+                      card_swap_deck = None):
         """Daniel's part: Swap hand with a deck only if
         it's not completed(4 of a kind)."""
-        pass
+        
+        #Checks if both decks are incomplete, then allows to be swapped
+        if self.has_four_of_a_kind(self.hand) is False and (
+                self.has_four_of_a_kind(self.decks(deck_num)) is False):
+            if deck_swap:
+                    self.hand = self.decks(deck_num)
+            if card_swap:
+                self.hand[card_num1], self.decks[card_swap_deck][card_num2] = (
+                self.decks[card_swap_deck][card_num2], self.hand[card_num1])
+        else:
+            #Gives you a message if one of the decks are complete
+            print("""Invalid move: One of 
+                the decks you've chosen are already complete""")
 
     def has_four_of_a_kind(self):
         """Ryan's part: Check if self.hand is a 4-of-a-kind"""
