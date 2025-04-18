@@ -131,8 +131,23 @@ class CardGame:
         self.players = [Player(name) for name in player_names]
 
     def deal_cards(self):
-        """Steph's part: Deal cards to players hands/deck, and the center."""
-        pass
+        """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
+        and 1 set of 4 face-up cards to the center."""
+        total_cards_needed = (6 * 4 * 2) + 4 
+        
+        if len(self.deck.deck) < total_cards_needed:
+            raise ValueError("Not enough cards in the deck to deal.")
+    
+        for player in self.players:
+            # deal 5 face-down sets 
+            for i in range(5):
+                player.decks[i] = [self.deck.deck.pop() for _ in range(4)]
+    
+            # deal 1 hand set 
+            player.hand = [self.deck.deck.pop() for _ in range(4)]
+            player.decks[5] = player.hand 
+       
+        self.center_cards = [self.deck.deck.pop() for _ in range(4)]
     
     def center_swap(self, player, player_card, center_card):
         """
