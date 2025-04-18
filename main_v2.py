@@ -108,10 +108,17 @@ class Player:
             print("""Invalid move: One of 
                 the decks you've chosen are already complete""")
 
-    def has_four_of_a_kind(self):
-        """Ryan's part: Check if self.hand is a 4-of-a-kind"""
-        pass
-
+    def has_four_of_a_kind(self, deck):
+        """Ryan's part: Check if self.hand is a 4-of-a-kind
+        """
+        deck_values = []
+        four_of_a_kind = False
+        for card in deck:
+            deck_values.append(card.value)
+        if all(x == deck_values[0] for x in deck_values):
+            four_of_a_kind = True
+        if deck == self.hand and four_of_a_kind:
+            self.completed_decks += 1
 
 # First: __init__ CardGame(): initializes deck, players, and center cards
 # Second: deal cards to players and center
@@ -187,8 +194,9 @@ class CardGame:
 
 
     def check_victory(self, player):
-        """Ryan's part: check if a player has won (player.completed_decks == 6)"""
-    pass
+        """Ryan's part: Checks if player meets win conditions (each deck is completed)
+        """
+        True if player.completed_decks == 6 else False
 
     def play_turn(self, player_index):
         """Each turn, player chooses to swap with center or swap deck """
