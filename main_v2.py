@@ -202,10 +202,14 @@ class CardGame:
         """Each turn, player chooses to swap with center or swap deck """
         pass
     def save(self):
+        """(Ryan)Creates a GameState object and calls its save_file method.
+        """
         game_state = GameState(self.players, self.deck, self.center_cards)
         game_state.save_file()
     
     def load(self, filename):
+        """(Ryan)Loads data from input file into the CardGame variables.
+        """
         try:
             with open(filename, 'r') as file:
                 self.players = []
@@ -271,6 +275,8 @@ class GameState:
         self.center_cards = center_cards
     
     def save_file(self, filename):
+        """(Ryan)Writes import game data to .txt file
+        """
         with open(filename, 'w') as file:
             file.write(f"Player 1: {self.players[0]}")
             for deck in self.players[0].decks:
