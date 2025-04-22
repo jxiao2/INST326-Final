@@ -201,6 +201,88 @@ class CardGame:
     def play_turn(self, player_index):
         """Each turn, player chooses to swap with center or swap deck """
         pass
+    def save(self):
+        game_state = GameState(self.players, self.deck, self.center_cards)
+        game_state.save_file()
+    
+    def load(self, filename):
+        try:
+            with open(filename, 'r') as file:
+                self.players = []
+                self.center_cards = []
+                self.deck = 0
+                for line in file:
+                    line = line.strip()
+                    if line.startswith("Player 1: "):
+                        player1 = Player(line.split(": ", 1)[1])
+                        self.players.append(player1)
+                    elif line.startswith("Player 2: "):
+                        player2 = Player(line.split(": ", 1)[1])
+                        self.players.append(player2)
+                    elif line.startswith("Player 1 Deck: "):
+                        deck_str = line.split(": ", 1)[1]
+                        deck_cards = []
+                        for i in deck_str.split(",", 3):
+                            card_value, card_suit = i.split(" of ")[0]
+                            card = Card(card_suit, card_value)
+                            deck_cards.append(card)
+                        self.players[0].decks.append(deck_cards)
+                    elif line.startswith("Player 2 Deck: "):
+                        deck_str = line.split(": ", 1)[1]
+                        deck_cards = []
+                        for i in deck_str.split(",", 3):
+                            card_value, card_suit = i.split(" of ")[0]
+                            card = Card(card_suit, card_value)
+                            deck_cards.append(card)
+                        self.players[1].decks.append(deck_cards)
+                    elif line.startswith("Player 1 Hand: "):
+                        deck_str = line.split(": ", 1)[1]
+                        deck_cards = []
+                        for i in deck_str.split(",", 3):
+                            card_value, card_suit = i.split(" of ")[0]
+                            card = Card(card_suit, card_value)
+                            self.players[0].hand.append(card)
+                    elif line.startswith("Player 2 Hand: "):
+                        deck_str = line.split(": ", 1)[1]
+                        deck_cards = []
+                        for i in deck_str.split(",", 3):
+                            card_value, card_suit = i.split(" of ")[0]
+                            card = Card(card_suit, card_value)
+                            self.players[1].hand.append(card)
+                    elif line.startswith("Center Cards: "):
+                        deck_str = line.split(": ", 1)[1]
+                        deck_cards = []
+                        for i in deck_str.split(",", 3):
+                            card_value, card_suit = i.split(" of ")[0]
+                            card = Card(card_suit, card_value)
+                            self.center_cards.append(card)
+                    elif line.startswith("Card: "):
+                        deck_str = line.split(": ", 1)[1]
+                        card_value, card_suit = i.split(" of ")[0]
+                        card = Card(card_suit, card_value)
+                        self.deck.append(card)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Save file '{filename}' not found")
+
+class GameState:
+    def __init__(self, players, deck, center_cards):
+        self.players = players
+        self.deck = deck
+        self.center_cards = center_cards
+    
+    def save_file(self, filename):
+        with open(filename, 'w') as file:
+            file.write(f"Player 1: {self.players[0]}")
+            for deck in self.players[0].decks:
+                file.write(f"Player 1 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
+            file.write(f"Player 1 Hand: {self.players[0].hand[0]},{self.players[0].hand[1]},{self.players[0].hand[2]},{self.players[0].hand[3]}")
+            file.write(f"Center Cards: {self.center_cards[0]},{self.center_cards[1]},{self.center_cards[2]},{self.center_cards[3]},")
+            file.write(f"Player 2: {self.players[1]}")
+            for deck in self.players[1].decks:
+                file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
+            file.write(f"Player 2 Hand: {self.players[1].hand[0]},{self.players[1].hand[1]},{self.players[1].hand[2]},{self.players[1].hand[3]}")
+            for card in self.deck:
+                file.write(f"Card: {card}")
     
            
 def main(args):
