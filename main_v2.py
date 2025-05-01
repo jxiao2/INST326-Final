@@ -130,12 +130,12 @@ class Player:
 # At the end of each turn, call check_victory() to see if player has won 
 
 class CardGame:
-    def __init__(self, player_names):
+    def __init__(self, player1, player2):
         self.deck = Deck()
-        self.center_cards = []
         self.deck.shuffle()
-        self.deal_cards()
-        self.players = [Player(name) for name in player_names]
+        
+        self.center_cards = []
+        self.players = [Player(player1), Player(player2)]
 
     def deal_cards(self):
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
@@ -291,20 +291,24 @@ class GameState:
                 file.write(f"Card: {card}")
     
            
-def main(args):
-    # deck = Deck() -> added this to init of cardGame
-    # deck.shuffle()  -> added this to init of cardGame
-    game = CardGame(args)
-    game.deal_cards()
+# def main(args):
+#     # deck = Deck() -> added this to init of cardGame
+#     # deck.shuffle()  -> added this to init of cardGame
+#     game = CardGame(args.player1, args.player2)
+#     game.deal_cards()
     
-    # each player takes turns until a player wins
-    player1 = game.players[0]
-    player2 = game.players[1]
-    while (not game.check_victory(player1) and 
-           not game.check_victory(player2)):
-        game.play_turn(0)
+#     # each player takes turns until a player wins
+#     player1 = game.players[0]
+#     player2 = game.players[1]
+#     while (not game.check_victory(player1) and 
+#            not game.check_victory(player2)):
+#         game.play_turn(0)
         
-        game.play_turn(1)
+#         game.play_turn(1)
+        
+def main(args):
+    game = CardGame(args.player1, args.player2)
+    print(game)
 
 
 def parse_args(arglist):
