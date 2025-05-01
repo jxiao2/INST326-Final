@@ -24,7 +24,7 @@ class Card:
         self.value = value
     
     def __repr__(self):
-        return f"{self.value} of {self.suit}"
+        return f"{self.value}{self.suit}"
     
     def __eq__(self, other):
         return self.suit == other.suit and self.value == other.value
@@ -45,8 +45,8 @@ class Deck:
         Side effects: 
             adds 52 card objects to the deck attribute, one for each unique card
         """
-        self.suits = ["Spades", "Hearts", "Clubs", "Diamonds"]
-        self.values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
+        self.suits = ["♠", "♥", "♣", "♦"]
+        self.values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
         
         # Create Deck
         self.deck = [Card(suit, value) for suit in self.suits for value in self.values]
@@ -143,15 +143,12 @@ class CardGame:
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
         and 1 set of 4 face-up cards to the center."""
 
-        for player in self.players:
-            # deal 5 face-down sets 
-            for i in range(5):
-                player.decks[i] = [self.deck.deck.pop() for _ in range(4)]
-    
-            # deal 1 hand set 
-            player.hand = [self.deck.deck.pop() for _ in range(4)]
-            player.decks[5] = player.hand 
-       
+        self.p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        self.p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        
+        self.p1.hand = [self.deck.deck.pop() for _ in range(4)]
+        self.p2.hand = [self.deck.deck.pop() for _ in range(4)]
+
         self.center_cards = [self.deck.deck.pop() for _ in range(4)]
     
     def center_swap(self, player, player_card, center_card):
@@ -308,6 +305,16 @@ def main(args):
     game = CardGame(args.player1, args.player2)
     game.deal_cards()
     
+    print(game.p1.decks)
+    print("\n")
+    print(game.p2.decks)
+    print("\n")
+    print(game.p1.hand)
+    print("\n")
+    print(game.p2.hand)
+    print("\n")
+    print(game.center_cards)
+    print("\n")
     
 
 
