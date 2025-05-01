@@ -134,17 +134,15 @@ class CardGame:
         self.deck = Deck()
         self.deck.shuffle()
         
+        self.p1 = Player(player1)
+        self.p2 = Player(player2)
+        
         self.center_cards = []
-        self.players = [Player(player1), Player(player2)]
 
     def deal_cards(self):
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
         and 1 set of 4 face-up cards to the center."""
-        total_cards_needed = (6 * 4 * 2) + 4 
-        
-        if len(self.deck.deck) < total_cards_needed:
-            raise ValueError("Not enough cards in the deck to deal.")
-    
+
         for player in self.players:
             # deal 5 face-down sets 
             for i in range(5):
@@ -308,7 +306,9 @@ class GameState:
         
 def main(args):
     game = CardGame(args.player1, args.player2)
-    print(game)
+    game.deal_cards()
+    
+    
 
 
 def parse_args(arglist):
