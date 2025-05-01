@@ -83,11 +83,14 @@ class Player:
     
     def __init__(self, name):
         self.name = name
-        # 4 cards in hand
-        self.hand = []        
-        # 6 personal decks
-        self.decks = [[] for _ in range(6)] 
+        
+        self.swap_deck_moves = 1
+        self.swap_card_moves = 1
+        
         self.completed_decks = 0
+        
+        self.hand = [] # 4 cards
+        self.decks = [[] for _ in range(5)] # 5 sets of 4 cards
 
     def swap_with_deck(self, deck_swap = False, card_swap = False, 
                       deck_num = None, card_num1 = None, card_num2 = None, 
@@ -130,62 +133,52 @@ class Player:
 # At the end of each turn, call check_victory() to see if player has won 
 
 class CardGame:
-    def __init__(self, player1, player2):
+    def __init__(self):
         self.deck = Deck()
         self.deck.shuffle()
         
-        self.p1 = Player(player1)
-        self.p2 = Player(player2)
-        
         self.center_cards = []
 
-    def deal_cards(self):
+    def deal_cards(self, p1, p2):
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
         and 1 set of 4 face-up cards to the center."""
 
-        self.p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
-        self.p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
         
-        self.p1.hand = [self.deck.deck.pop() for _ in range(4)]
-        self.p2.hand = [self.deck.deck.pop() for _ in range(4)]
+        p1.hand = [self.deck.deck.pop() for _ in range(4)]
+        p2.hand = [self.deck.deck.pop() for _ in range(4)]
 
         self.center_cards = [self.deck.deck.pop() for _ in range(4)]
     
-    def center_swap(self, player, player_card, center_card):
+    def center_swap(self, player):
         """
         Tanika's part: 
         Swap one card from player's hand with a card from center.
 
         Args:
             player (Player): the current player
-            player_card (Card): the Card object in the player's hand to swap
-            center_card (Card): the Card object in the center to swap
 
-        Returns:
-            bool:   False if cards requested are invalid, 
-                    True if swap is successful.
+        Side effects: 
+            swaps a card from player hand with a card from the center pile
         """
-        if player_card not in player.hand:
-            print(f"{player_card} isn't in {player.name}'s hand")
-            return False
-        else: 
-            hand_index = [i for i in range(len(player.hand)) 
-                        if player.hand[i] == player_card][0]
+        handCard = input("Card in hand (1-4): ")
+        while handCard not in ['1', '2', '3', '4']:
+            print("Select valid option")
+            handCard = input("Card in hand (1-4): ")
+        
+        centerCard = input("Swap with (1-4): ")
+        while centerCard not in ['1', '2', '3', '4']:
+            print("Select valid option")
+            centerCard = input("Card in hand (1-4): ")
 
-        if center_card not in self.center_cards:
-            print(f"{center_card} isn't a center card")
-            return False
-        else:
-            center_index = [i for i in range(len(self.center_cards)) 
-                            if self.center_cards[i] == center_card][0]
-
+        handCard = int(handCard)
+        centerCard = int(centerCard)
+        
         # Swap cards
-        temp = player.hand[hand_index]
-        player.hand[hand_index] = self.center_cards[center_index]
-        self.center_cards[center_index] = temp
-
-        return True
-
+        temp = player.hand[handCard-1]
+        player.hand[handCard-1] = self.center_cards[centerCard-1]
+        self.center_cards[centerCard-1] = temp
 
 
     def check_victory(self, player):
@@ -193,14 +186,52 @@ class CardGame:
         """
         True if player.completed_decks == 6 else False
 
-    def play_turn(self, player_index):
-        """Each turn, player chooses to swap with center or swap deck """
-        pass
     def save(self):
         """(Ryan)Creates a GameState object and calls its save_file method.
         """
         game_state = GameState(self.players, self.deck, self.center_cards)
         game_state.save_file()
+    
+    def show_board(self, player):
+        print("-------------------------------")
+        print(f"Center: {self.center_cards}\n")
+        
+        for i in range(5):
+            print(f"[Deck {i+1}]", end=' ')
+        
+        print(f"\n{player.hand}")
+        print("-------------------------------")
+        
+    
+    def play_turn(self, player):
+        """Each turn, player chooses to swap with center or swap deck """
+        while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
+            self.show_board(player)
+            
+            print(f"\n{player.name}s turn")
+            print(f"1.) Swap Card ({player.swap_card_moves} left)")
+            print(f"2.) Swap Deck ({player.swap_deck_moves} left)")
+            print(f"3.) End Turn")
+            print(f"4.) Save and Quit\n")
+            choice = input("Select move: ")
+        
+            while choice not in ['1', '2', '3', '4']:
+                print("Please select a valid option")
+                choice = input("Select move: ")
+                
+                
+            if choice == '1':
+                if player.swap_card_moves == 0:
+                    print("No more card swaps")
+                    continue
+                self.center_swap(player)
+                player.swap_card_moves -= 1
+            elif choice == '2':
+                pass
+            elif choice == '3':
+                pass
+            else: 
+                pass
     
     def load(self, filename):
         """(Ryan)Loads data from input file into the CardGame variables.
@@ -300,21 +331,49 @@ class GameState:
 #         game.play_turn(0)
         
 #         game.play_turn(1)
+
+
+def game_brain(args):
+    currentTurn = 1
+    
+    p1 = Player(args.player1)
+    p2 = Player(args.player2)
+    game = CardGame()
+    game.deal_cards(p1, p2)
+
+    while p1.completed_decks != 6 and p2.completed_decks != 6: 
+        if currentTurn == 1: 
+            game.play_turn(p1)
+            currentTurn = 0
+        else: 
+            game.play_turn(p2)
+            currentTurn = 1
+    
+    
+    
         
 def main(args):
-    game = CardGame(args.player1, args.player2)
-    game.deal_cards()
+    print("******(DANIELS FUN CARD GAME)******")
+    print("1.) New Game")
+    print("2.) Load Game")
+    print("3.) Rules") # Might remove and just have a text file in the repo with rules
     
-    print(game.p1.decks)
-    print("\n")
-    print(game.p2.decks)
-    print("\n")
-    print(game.p1.hand)
-    print("\n")
-    print(game.p2.hand)
-    print("\n")
-    print(game.center_cards)
-    print("\n")
+    choice = input()
+    
+    while choice not in ['1', '2', '3']:
+        print("1.) New Game")
+        print("2.) Load Game")
+        print("3.) Rules") 
+        print("Please select a valid option")
+        choice = input()
+        
+    if choice == '1': 
+        game_brain(args)
+    elif choice == '2': 
+        pass
+    elif choice == '3': 
+        pass
+
     
 
 
