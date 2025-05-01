@@ -227,10 +227,13 @@ class CardGame:
                 self.center_swap(player)
                 player.swap_card_moves -= 1
             elif choice == '2':
+                # Swap deck functionality goes here
                 pass
             elif choice == '3':
+                # End turn functionality goes here
                 pass
             else: 
+                # Call save function + quit game here
                 pass
     
     def load(self, filename):
@@ -316,23 +319,6 @@ class GameState:
             for card in self.deck:
                 file.write(f"Card: {card}")
     
-           
-# def main(args):
-#     # deck = Deck() -> added this to init of cardGame
-#     # deck.shuffle()  -> added this to init of cardGame
-#     game = CardGame(args.player1, args.player2)
-#     game.deal_cards()
-    
-#     # each player takes turns until a player wins
-#     player1 = game.players[0]
-#     player2 = game.players[1]
-#     while (not game.check_victory(player1) and 
-#            not game.check_victory(player2)):
-#         game.play_turn(0)
-        
-#         game.play_turn(1)
-
-
 def game_brain(args):
     currentTurn = 1
     
@@ -348,9 +334,7 @@ def game_brain(args):
         else: 
             game.play_turn(p2)
             currentTurn = 1
-    
-    
-    
+
         
 def main(args):
     print("******(DANIELS FUN CARD GAME)******")
@@ -370,12 +354,11 @@ def main(args):
     if choice == '1': 
         game_brain(args)
     elif choice == '2': 
+        # Load game functionality goes here
         pass
     elif choice == '3': 
+        # Display rules here (Make a function for this)
         pass
-
-    
-
 
 def parse_args(arglist):
     """Parse command line arguments
