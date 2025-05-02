@@ -133,21 +133,24 @@ class Player:
 # At the end of each turn, call check_victory() to see if player has won 
 
 class CardGame:
-    def __init__(self):
+    def __init__(self, p1, p2):
         self.deck = Deck()
         self.deck.shuffle()
         
+        self.p1 = p1
+        self.p2 = p2
+        
         self.center_cards = []
 
-    def deal_cards(self, p1, p2):
+    def deal_cards(self):
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
         and 1 set of 4 face-up cards to the center."""
 
-        p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
-        p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        self.p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
+        self.p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
         
-        p1.hand = [self.deck.deck.pop() for _ in range(4)]
-        p2.hand = [self.deck.deck.pop() for _ in range(4)]
+        self.p1.hand = [self.deck.deck.pop() for _ in range(4)]
+        self.p2.hand = [self.deck.deck.pop() for _ in range(4)]
 
         self.center_cards = [self.deck.deck.pop() for _ in range(4)]
     
@@ -162,24 +165,36 @@ class CardGame:
         Side effects: 
             swaps a card from player hand with a card from the center pile
         """
-        handCard = input("Card in hand (1-4): ")
-        while handCard not in ['1', '2', '3', '4']:
+        handCardIndex = input("Card in hand (1-4): ")
+        while handCardIndex not in ['1', '2', '3', '4']:
             print("Select valid option")
-            handCard = input("Card in hand (1-4): ")
+            handCardIndex = input("Card in hand (1-4): ")
         
-        centerCard = input("Swap with (1-4): ")
-        while centerCard not in ['1', '2', '3', '4']:
+        centerCardIndex = input("Swap with (1-4): ")
+        while centerCardIndex not in ['1', '2', '3', '4']:
             print("Select valid option")
-            centerCard = input("Card in hand (1-4): ")
+            centerCardIndex = input("Card in hand (1-4): ")
 
-        handCard = int(handCard)
-        centerCard = int(centerCard)
+        handCardIndex = int(handCardIndex)
+        centerCardIndex = int(centerCardIndex)
         
         # Swap cards
-        temp = player.hand[handCard-1]
-        player.hand[handCard-1] = self.center_cards[centerCard-1]
-        self.center_cards[centerCard-1] = temp
+        temp = player.hand[handCardIndex-1]
+        player.hand[handCardIndex-1] = self.center_cards[centerCardIndex-1]
+        self.center_cards[centerCardIndex-1] = temp
 
+    def deck_swap(self, player):
+        deckIndex = input("Deck to swap with (1-5): ")
+        while deckIndex not in ['1', '2', '3', '4', '5']:
+            print("Select valid option")
+            deckIndex = input("Deck to swap with (1-5): ")
+            
+        deckIndex = int(deckIndex)
+        
+        # Swap decks
+        temp = player.hand
+        player.hand = player.decks[deckIndex-1]
+        player.decks[deckIndex-1] = temp
 
     def check_victory(self, player):
         """Ryan's part: Checks if player meets win conditions (each deck is completed)
@@ -206,9 +221,10 @@ class CardGame:
     def play_turn(self, player):
         """Each turn, player chooses to swap with center or swap deck """
         while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
+            print(f"\n{player.name}s turn")
+            
             self.show_board(player)
             
-            print(f"\n{player.name}s turn")
             print(f"1.) Swap Card ({player.swap_card_moves} left)")
             print(f"2.) Swap Deck ({player.swap_deck_moves} left)")
             print(f"3.) End Turn")
@@ -219,22 +235,35 @@ class CardGame:
                 print("Please select a valid option")
                 choice = input("Select move: ")
                 
-                
+            # Player chooses swap card
             if choice == '1':
                 if player.swap_card_moves == 0:
                     print("No more card swaps")
                     continue
+                
                 self.center_swap(player)
                 player.swap_card_moves -= 1
+            
+            # Player chooses swap deck
             elif choice == '2':
-                # Swap deck functionality goes here
-                pass
+                if player.swap_deck_moves == 0:
+                    print("No more deck swaps")
+                    continue
+                
+                self.deck_swap(player)
+                player.swap_deck_moves -= 1
+                
+            # Player chooses to end turn
             elif choice == '3':
-                # End turn functionality goes here
-                pass
+                print("\n\n\n")
+                return 0
+            
+            # Player chooses to save and quit
             else: 
-                # Call save function + quit game here
-                pass
+                save_game(self)
+            
+        self.show_board(player)
+        print("\n\n\n")
     
     def load(self, filename):
         """(Ryan)Loads data from input file into the CardGame variables.
@@ -297,35 +326,29 @@ class CardGame:
         except FileNotFoundError:
             raise FileNotFoundError(f"Save file '{filename}' not found")
 
-class GameState:
-    def __init__(self, players, deck, center_cards):
-        self.players = players
-        self.deck = deck
-        self.center_cards = center_cards
-    
-    def save_file(self, filename):
-        """(Ryan)Writes import game data to .txt file
-        """
-        with open(filename, 'w') as file:
-            file.write(f"Player 1: {self.players[0]}")
-            for deck in self.players[0].decks:
-                file.write(f"Player 1 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
-            file.write(f"Player 1 Hand: {self.players[0].hand[0]},{self.players[0].hand[1]},{self.players[0].hand[2]},{self.players[0].hand[3]}")
-            file.write(f"Center Cards: {self.center_cards[0]},{self.center_cards[1]},{self.center_cards[2]},{self.center_cards[3]},")
-            file.write(f"Player 2: {self.players[1]}")
-            for deck in self.players[1].decks:
-                file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
-            file.write(f"Player 2 Hand: {self.players[1].hand[0]},{self.players[1].hand[1]},{self.players[1].hand[2]},{self.players[1].hand[3]}")
-            for card in self.deck:
-                file.write(f"Card: {card}")
-    
+def save_game(self, filename):
+    """(Ryan)Writes import game data to .txt file
+    """
+    with open(filename, 'w') as file:
+        file.write(f"Player 1: {self.players[0]}")
+        for deck in self.players[0].decks:
+            file.write(f"Player 1 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
+        file.write(f"Player 1 Hand: {self.players[0].hand[0]},{self.players[0].hand[1]},{self.players[0].hand[2]},{self.players[0].hand[3]}")
+        file.write(f"Center Cards: {self.center_cards[0]},{self.center_cards[1]},{self.center_cards[2]},{self.center_cards[3]},")
+        file.write(f"Player 2: {self.players[1]}")
+        for deck in self.players[1].decks:
+            file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
+        file.write(f"Player 2 Hand: {self.players[1].hand[0]},{self.players[1].hand[1]},{self.players[1].hand[2]},{self.players[1].hand[3]}")
+        for card in self.deck:
+            file.write(f"Card: {card}")
+                
 def game_brain(args):
     currentTurn = 1
     
     p1 = Player(args.player1)
     p2 = Player(args.player2)
-    game = CardGame()
-    game.deal_cards(p1, p2)
+    game = CardGame(p1, p2)
+    game.deal_cards()
 
     while p1.completed_decks != 6 and p2.completed_decks != 6: 
         if currentTurn == 1: 
