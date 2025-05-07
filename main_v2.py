@@ -110,6 +110,8 @@ class Player:
             #Gives you a message if one of the decks are complete
             print("""Invalid move: One of 
                 the decks you've chosen are already complete""")
+            
+            
     def has_four_of_a_kind(self, deck):
         """True iff deck has 4 cards and they all share the same value."""
         # self.completed_decks += 1
@@ -201,25 +203,29 @@ class CardGame:
             print(f"\n{player.name} wins the game!")
             sys.exit()
             
-            
     def deck_swap(self, player):
-        ids = [str(id) for id in player.deck_ids]
+        ids = [str(id) for id in player.deck_ids]   
         str_ids = ', '.join(ids)
         choice = input(f"Deck to swap with [{str_ids}]: ")
 
-        while choice not in ids:         
+        while (choice not in ids or
+            player.has_four_of_a_kind(
+                player.decks[player.deck_ids.index(int(choice))])):
             print("Select a valid option")
             choice = input(f"Deck to swap with [{str_ids}]: ")
 
-        deckIndex = player.deck_ids.index(int(choice))         
+        deckIndex = player.deck_ids.index(int(choice))
 
-        temp = player.decks[deckIndex]        
-        player.decks[deckIndex] = player.hand
-        player.hand = temp
+        player.hand, player.decks[deckIndex] = player.decks[deckIndex], player.hand
+        player.hand_id, player.deck_ids[deckIndex] = (
+            player.deck_ids[deckIndex],
+            player.hand_id,
+        )
 
-        temp = player.deck_ids[deckIndex]       
-        player.deck_ids[deckIndex] = player.hand_id
-        player.hand_id = temp
+        player.update_completed_decks()
+        if self.check_victory(player):
+            print(f"\n{player.name} wins the game!")
+            sys.exit()
 
     def check_victory(self, player):
         """Ryan's part: Checks if player meets win conditions (each deck is completed)
