@@ -234,7 +234,7 @@ class CardGame:
         
 
     def save_game(self):
-        filename = input("Enter a filepath for save file: ")
+        filename = input("Enter a name for this save: ")
         with open(filename, 'w') as file:
             file.write(f"Player 1: {self.p1.name}\n")
             for deck in self.p1.decks:
@@ -393,7 +393,7 @@ def game_brain(args, status):
         game = CardGame(p1, p2)
         game.deal_cards()
     elif status == "Load Game":
-        filepath = input("Enter path to file: ")
+        filepath = input("Enter name of save: ")
         p1, p2 = load_players(filepath)
         game = CardGame(p1, p2)
         game.load(filepath)
