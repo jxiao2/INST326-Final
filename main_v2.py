@@ -22,6 +22,8 @@ class Card:
         """
         self.suit = suit
         self.value = value
+        
+        
     
     def __repr__(self):
         return f"{self.value}{self.suit}"
@@ -91,6 +93,8 @@ class Player:
         
         self.hand = [] # 4 cards
         self.decks = [[] for _ in range(5)] # 5 sets of 4 cards
+        self.hand_id = 1
+        self.deck_ids = [2, 3, 4, 5, 6]
 
     def swap_with_deck(self, deck_swap = False, deck_num = None):
         """Daniel's part: Swap hand with a deck only if
@@ -180,17 +184,24 @@ class CardGame:
         self.center_cards[centerCardIndex-1] = temp
 
     def deck_swap(self, player):
-        deckIndex = input("Deck to swap with (1-5): ")
-        while deckIndex not in ['1', '2', '3', '4', '5']:
-            print("Select valid option")
-            deckIndex = input("Deck to swap with (1-5): ")
-            
-        deckIndex = int(deckIndex)
-        
-        # Swap decks
-        temp = player.hand
-        player.hand = player.decks[deckIndex-1]
-        player.decks[deckIndex-1] = temp
+        ids = [str(id) for id in player.deck_ids]
+        str_ids = ', '.join(ids)
+        choice = input(f"Deck to swap with [{str_ids}]: ")
+
+        while choice not in ids:         
+            print("Select a valid option")
+            choice = input(f"Deck to swap with [{str_ids}]: ")
+
+        deckIndex = player.deck_ids.index(int(choice))         
+
+        temp = player.decks[deckIndex]        
+        player.decks[deckIndex] = player.hand
+        player.hand = temp
+
+        temp = player.deck_ids[deckIndex]       
+        player.deck_ids[deckIndex] = player.hand_id
+        player.hand_id = temp
+
 
     def check_victory(self, player):
         """Ryan's part: Checks if player meets win conditions (each deck is completed)
@@ -214,10 +225,11 @@ class CardGame:
         print("-------------------------------")
         print(f"Center: {self.center_cards}\n")
         
-        for i in range(5):
-            print(f"[Deck {i+1}]", end=' ')
+        for label in player.deck_ids:
+            print(f"[Deck {label}]", end=' ')
+        print()
         
-        print(f"\n{player.hand}")
+        print(f"[Deck {player.hand_id}]: {player.hand}")
         print("-------------------------------")
         
     
