@@ -233,7 +233,7 @@ class CardGame:
         return True if player.completed_decks == 6 else False
         
 
-    def save_game(self):
+    def save_game(self, current_turn, card_swaps, deck_swaps):
         filename = input("Enter a name for this save: ")
         with open(filename, 'w') as file:
             file.write(f"Player 1: {self.p1.name}\n")
@@ -245,6 +245,9 @@ class CardGame:
             for deck in self.p2.decks:
                 file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}\n")
             file.write(f"Player 2 Hand: {self.p2.hand[0]},{self.p2.hand[1]},{self.p2.hand[2]},{self.p2.hand[3]}\n")
+            file.write(f"Current Turn: {current_turn}\n")
+            file.write(f"Player Card Swaps: {card_swaps}\n")
+            file.write(f"Player Deck Swaps: {deck_swaps}")
     
     def show_board(self, player):
         print("-------------------------------")
@@ -263,10 +266,10 @@ class CardGame:
 
         
     
-    def play_turn(self, player):
+    def play_turn(self, player, current_turn, card_swaps=1, deck_swaps=1)):
         """Each turn, player chooses to swap with center or swap deck """
-        player.swap_card_moves = 1
-        player.swap_deck_moves = 1
+        player.swap_card_moves = card_swaps
+        player.swap_deck_moves = deck_swaps
         while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
             print(f"\n{player.name}'s turn")
             
@@ -307,7 +310,8 @@ class CardGame:
             
             # Player chooses to save and quit
             else: 
-                self.save_game()
+                self.save_game(current_turn, player.swap_card_moves, 
+                               player.swap_deck_moves)
                 sys.exit()
             
         self.show_board(player)
@@ -370,6 +374,34 @@ class CardGame:
         except ValueError:
            raise ValueError(f"{filename} not a save file")
 
+    def load_turn(self, filename):
+        try:
+            with open(filename, 'r') as file:
+                for line in file:
+                    if line.startswith("Current Turn: "):
+                        current_turn = line.split(": ", 1)[1]
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Save file '{filename}' not found")
+        except ValueError:
+           raise ValueError(f"{filename} not a save file") 
+       
+        return int(current_turn)
+
+    def load_swaps(self, filename):
+        try:
+            with open(filename, 'r') as file:
+                for line in file:
+                    if line.startswith("Player Card Swaps: "):
+                        card_swaps = int(line.split(": ", 1)[1])
+                    elif line.startswith("Player Deck Swaps: "):
+                        deck_swaps = int(line.split(": ", 1)[1])
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Save file '{filename}' not found")
+        except ValueError:
+           raise ValueError(f"{filename} not a save file") 
+       
+        return card_swaps, deck_swaps
+    
 def load_players(filename):
     try:
         with open(filename, 'r') as file:
@@ -392,18 +424,24 @@ def game_brain(args, status):
         p2 = Player(args.player2)
         game = CardGame(p1, p2)
         game.deal_cards()
+        card_swaps = 1
+        deck_swaps = 1
     elif status == "Load Game":
         filepath = input("Enter name of save: ")
         p1, p2 = load_players(filepath)
         game = CardGame(p1, p2)
         game.load(filepath)
+        currentTurn = game.load_turn(filepath)
+        card_swaps, deck_swaps = game.load_swaps(filepath)
     while p1.completed_decks != 6 and p2.completed_decks != 6: 
         if currentTurn == 1: 
-            game.play_turn(p1)
+            game.play_turn(p1, currentTurn, card_swaps, deck_swaps)
             currentTurn = 0
         else:
-            game.play_turn(p2)
+            game.play_turn(p2, currentTurn, card_swaps, deck_swaps)
             currentTurn = 1
+        card_swaps = 1
+        deck_swaps = 1
 
         
 def main(args):
