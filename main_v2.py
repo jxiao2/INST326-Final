@@ -110,19 +110,30 @@ class Player:
             #Gives you a message if one of the decks are complete
             print("""Invalid move: One of 
                 the decks you've chosen are already complete""")
-
     def has_four_of_a_kind(self, deck):
-        """Ryan's part: Check if self.hand is a 4-of-a-kind
-        """
-        deck_values = []
-        four_of_a_kind = False
-        for card in deck:
-            deck_values.append(card.value)
-        if all(x == deck_values[0] for x in deck_values):
-            four_of_a_kind = True
-        if deck == self.hand and four_of_a_kind:
-            self.completed_decks += 1
+        """True iff deck has 4 cards and they all share the same value."""
+        # self.completed_decks += 1
+        return len(deck) == 4 and len({c.value for c in deck}) == 1
 
+    # def has_four_of_a_kind(self, deck):
+    #     """Ryan's part: Check if self.hand is a 4-of-a-kind
+    #     """
+    #     deck_values = []
+    #     four_of_a_kind = False
+    #     for card in deck:
+    #         deck_values.append(card.value)
+    #     if all(x == deck_values[0] for x in deck_values):
+    #         four_of_a_kind = True
+    #     if deck == self.hand and four_of_a_kind:
+    #         self.completed_decks += 1
+            
+
+    def update_completed_decks(self):
+        """Re‑count how many 4‑of‑a‑kind piles the player has."""
+        all_piles = [self.hand] + self.decks
+        self.completed_decks = sum(1 for pile in all_piles if self.has_four_of_a_kind(pile))
+        
+        
 # First: __init__ CardGame(): initializes deck, players, and center cards
 # Second: deal cards to players and center
 # Third: players alternate play_turn: gives option to swap with center or deck
@@ -183,6 +194,14 @@ class CardGame:
         player.hand[handCardIndex-1] = self.center_cards[centerCardIndex-1]
         self.center_cards[centerCardIndex-1] = temp
 
+        player.update_completed_decks()
+        
+        player.update_completed_decks()
+        if self.check_victory(player):
+            print(f"\n{player.name} wins the game!")
+            sys.exit()
+            
+            
     def deck_swap(self, player):
         ids = [str(id) for id in player.deck_ids]
         str_ids = ', '.join(ids)
@@ -202,11 +221,11 @@ class CardGame:
         player.deck_ids[deckIndex] = player.hand_id
         player.hand_id = temp
 
-
     def check_victory(self, player):
         """Ryan's part: Checks if player meets win conditions (each deck is completed)
         """
-        True if player.completed_decks == 6 else False
+        return True if player.completed_decks == 6 else False
+        
 
     def save_game(self):
         filename = input("Enter a filepath for save file: ")
@@ -224,13 +243,18 @@ class CardGame:
     def show_board(self, player):
         print("-------------------------------")
         print(f"Center: {self.center_cards}\n")
-        
-        for label in player.deck_ids:
-            print(f"[Deck {label}]", end=' ')
+
+        # table piles
+        for idx, label in enumerate(player.deck_ids):
+            suffix = ": DONE" if player.has_four_of_a_kind(player.decks[idx]) else ""
+            print(f"[Deck {label}{suffix}]", end=' ')
         print()
-        
-        print(f"[Deck {player.hand_id}]: {player.hand}")
+
+        # hand
+        hand_suffix = ": DONE" if player.has_four_of_a_kind(player.hand) else ""
+        print(f"[Deck {player.hand_id}{hand_suffix}]: {player.hand}")
         print("-------------------------------")
+
         
     
     def play_turn(self, player):

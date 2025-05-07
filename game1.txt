@@ -1,0 +1,15 @@
+Player 1: p1
+Player 1 Deck: A♦,J♠,K♣,7♣
+Player 1 Deck: 5♠,7♥,3♦,A♣
+Player 1 Deck: 10♠,9♠,A♠,7♠
+Player 1 Deck: 4♦,3♥,8♠,K♠
+Player 1 Deck: J♦,K♦,K♥,2♣
+Player 1 Hand: 2♠,4♠,6♠,3♣
+Center Cards: 5♦,Q♣,2♥,9♣
+Player 2: p2
+Player 2 Deck: 9♥,7♦,8♥,J♥
+Player 2 Deck: Q♥,Q♠,10♦,A♥
+Player 2 Deck: 8♣,4♣,6♣,4♥
+Player 2 Deck: Q♦,10♣,10♥,8♦
+Player 2 Deck: 9♦,6♥,J♣,5♣
+Player 2 Hand: 6♦,2♦,5♥,3♠
