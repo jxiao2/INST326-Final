@@ -223,6 +223,8 @@ class CardGame:
     
     def play_turn(self, player):
         """Each turn, player chooses to swap with center or swap deck """
+        player.swap_card_moves = 1
+        player.swap_deck_moves = 1
         while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
             print(f"\n{player.name}'s turn")
             
@@ -263,7 +265,7 @@ class CardGame:
             
             # Player chooses to save and quit
             else: 
-                save_game(self)
+                self.save_game()
                 sys.exit()
             
         self.show_board(player)
