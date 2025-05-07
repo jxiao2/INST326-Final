@@ -197,11 +197,18 @@ class CardGame:
         """
         True if player.completed_decks == 6 else False
 
-    def save(self):
-        """(Ryan)Creates a GameState object and calls its save_file method.
-        """
-        game_state = GameState(self.players, self.deck, self.center_cards)
-        game_state.save_file()
+    def save_game(self):
+        filename = input("Enter a filepath for save file: ")
+        with open(filename, 'w') as file:
+            file.write(f"Player 1: {self.p1.name}\n")
+            for deck in self.p1.decks:
+                file.write(f"Player 1 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}\n")
+            file.write(f"Player 1 Hand: {self.p1.hand[0]},{self.p1.hand[1]},{self.p1.hand[2]},{self.p1.hand[3]}\n")
+            file.write(f"Center Cards: {self.center_cards[0]},{self.center_cards[1]},{self.center_cards[2]},{self.center_cards[3]}\n")
+            file.write(f"Player 2: {self.p2.name}\n")
+            for deck in self.p2.decks:
+                file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}\n")
+            file.write(f"Player 2 Hand: {self.p2.hand[0]},{self.p2.hand[1]},{self.p2.hand[2]},{self.p2.hand[3]}\n")
     
     def show_board(self, player):
         print("-------------------------------")
@@ -217,7 +224,7 @@ class CardGame:
     def play_turn(self, player):
         """Each turn, player chooses to swap with center or swap deck """
         while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
-            print(f"\n{player.name}s turn")
+            print(f"\n{player.name}'s turn")
             
             self.show_board(player)
             
@@ -257,6 +264,7 @@ class CardGame:
             # Player chooses to save and quit
             else: 
                 save_game(self)
+                sys.exit()
             
         self.show_board(player)
         print("\n\n\n")
@@ -266,91 +274,90 @@ class CardGame:
         """
         try:
             with open(filename, 'r') as file:
-                self.players = []
                 self.center_cards = []
-                self.deck = 0
+                self.p1.decks = []
+                self.p2.decks = []
                 for line in file:
                     line = line.strip()
-                    if line.startswith("Player 1: "):
-                        player1 = Player(line.split(": ", 1)[1])
-                        self.players.append(player1)
-                    elif line.startswith("Player 2: "):
-                        player2 = Player(line.split(": ", 1)[1])
-                        self.players.append(player2)
-                    elif line.startswith("Player 1 Deck: "):
+                    if line.startswith("Player 1 Deck: "):
                         deck_str = line.split(": ", 1)[1]
                         deck_cards = []
                         for i in deck_str.split(",", 3):
-                            card_value, card_suit = i.split(" of ")[0]
+                            card_value = i[:-1]
+                            card_suit = i[-1]
                             card = Card(card_suit, card_value)
                             deck_cards.append(card)
-                        self.players[0].decks.append(deck_cards)
+                        self.p1.decks.append(deck_cards)
                     elif line.startswith("Player 2 Deck: "):
                         deck_str = line.split(": ", 1)[1]
                         deck_cards = []
                         for i in deck_str.split(",", 3):
-                            card_value, card_suit = i.split(" of ")[0]
+                            card_value = i[:-1]
+                            card_suit = i[-1]
                             card = Card(card_suit, card_value)
                             deck_cards.append(card)
-                        self.players[1].decks.append(deck_cards)
+                        self.p2.decks.append(deck_cards)
                     elif line.startswith("Player 1 Hand: "):
                         deck_str = line.split(": ", 1)[1]
                         deck_cards = []
                         for i in deck_str.split(",", 3):
-                            card_value, card_suit = i.split(" of ")[0]
+                            card_value = i[:-1]
+                            card_suit = i[-1]
                             card = Card(card_suit, card_value)
-                            self.players[0].hand.append(card)
+                            self.p1.hand.append(card)
                     elif line.startswith("Player 2 Hand: "):
                         deck_str = line.split(": ", 1)[1]
                         deck_cards = []
                         for i in deck_str.split(",", 3):
-                            card_value, card_suit = i.split(" of ")[0]
+                            card_value = i[:-1]
+                            card_suit = i[-1]
                             card = Card(card_suit, card_value)
-                            self.players[1].hand.append(card)
+                            self.p2.hand.append(card)
                     elif line.startswith("Center Cards: "):
                         deck_str = line.split(": ", 1)[1]
                         deck_cards = []
                         for i in deck_str.split(",", 3):
-                            card_value, card_suit = i.split(" of ")[0]
+                            card_value = i[:-1]
+                            card_suit = i[-1]
                             card = Card(card_suit, card_value)
                             self.center_cards.append(card)
-                    elif line.startswith("Card: "):
-                        deck_str = line.split(": ", 1)[1]
-                        card_value, card_suit = i.split(" of ")[0]
-                        card = Card(card_suit, card_value)
-                        self.deck.append(card)
         except FileNotFoundError:
             raise FileNotFoundError(f"Save file '{filename}' not found")
+        except ValueError:
+           raise ValueError(f"{filename} not a save file")
 
-def save_game(self, filename):
-    """(Ryan)Writes import game data to .txt file
-    """
-    with open(filename, 'w') as file:
-        file.write(f"Player 1: {self.players[0]}")
-        for deck in self.players[0].decks:
-            file.write(f"Player 1 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
-        file.write(f"Player 1 Hand: {self.players[0].hand[0]},{self.players[0].hand[1]},{self.players[0].hand[2]},{self.players[0].hand[3]}")
-        file.write(f"Center Cards: {self.center_cards[0]},{self.center_cards[1]},{self.center_cards[2]},{self.center_cards[3]},")
-        file.write(f"Player 2: {self.players[1]}")
-        for deck in self.players[1].decks:
-            file.write(f"Player 2 Deck: {deck[0]},{deck[1]},{deck[2]},{deck[3]}")
-        file.write(f"Player 2 Hand: {self.players[1].hand[0]},{self.players[1].hand[1]},{self.players[1].hand[2]},{self.players[1].hand[3]}")
-        for card in self.deck:
-            file.write(f"Card: {card}")
+def load_players(filename):
+    try:
+        with open(filename, 'r') as file:
+            for line in file:
+                    line = line.strip()
+                    if line.startswith("Player 1: "):
+                        p1 = Player(line.split(": ", 1)[1])
+                    elif line.startswith("Player 2: "):
+                        p2 = Player(line.split(": ", 1)[1])
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Save file '{filename}' not found")
+    except ValueError:
+        raise ValueError(f"{filename} not a save file")
+    return p1, p2
                 
-def game_brain(args):
+def game_brain(args, status):
     currentTurn = 1
-    
-    p1 = Player(args.player1)
-    p2 = Player(args.player2)
-    game = CardGame(p1, p2)
-    game.deal_cards()
-
+    if status == "New Game":
+        p1 = Player(args.player1)
+        p2 = Player(args.player2)
+        game = CardGame(p1, p2)
+        game.deal_cards()
+    elif status == "Load Game":
+        filepath = input("Enter path to file: ")
+        p1, p2 = load_players(filepath)
+        game = CardGame(p1, p2)
+        game.load(filepath)
     while p1.completed_decks != 6 and p2.completed_decks != 6: 
         if currentTurn == 1: 
             game.play_turn(p1)
             currentTurn = 0
-        else: 
+        else:
             game.play_turn(p2)
             currentTurn = 1
 
@@ -371,10 +378,9 @@ def main(args):
         choice = input()
         
     if choice == '1': 
-        game_brain(args)
+        game_brain(args, "New Game")
     elif choice == '2': 
-        # Load game functionality goes here
-        pass
+        game_brain(args, "Load Game")
     elif choice == '3': 
         # Display rules here (Make a function for this)
         pass
