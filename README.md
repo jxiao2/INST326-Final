@@ -6,6 +6,19 @@ Daniel's Fun Card Game is a card game where two players compete against each oth
 make 6 decks of four-of-a-kind cards first. Players take turns swapping cards with a card in the center, or swapping their current hand with one of their 6 decks.
 The first player to complete all six four-of-a-kinds wins!
 
+How to play: 
+The center is the pile both players can access at any time
+
+On your turn you will be displayed your 5 hidden decks, and your hand of 4 cards. 
+
+You have the opportunity to swap a card from your hand with a card in the center. When doing so you will be prompted to choose the card in your hand you wish to swap and a card from the center to be swapped with.
+
+You also have the opportunity to swap your hand with one of your 5 face down decks.
+
+When a 4 of a kind is achieved that deck when placed facedown will be inaccessible and the player gains one point. 
+
+Players take turns until one player achieves 6 points. 
+
 ---
 
 ## File Descriptions
