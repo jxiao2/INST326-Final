@@ -166,8 +166,11 @@ class Player:
             set operations
             set comprehensions
         """
+        if len(deck) != 4:
+            return False
+
         values = {c.value for c in deck}
-        return len(deck) == 4 and values.intersection(set(values)) == values
+        return values.intersection({deck[0].value}) == values
 
     def update_completed_decks(self):
         """(Tanika) Re‑count how many 4‑of‑a‑kind piles the player has.
