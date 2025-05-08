@@ -10,7 +10,10 @@ class Card:
         value (str): the value of the card
     """
     def __init__(self, suit, value):
-        """Initializes a card object with a suit and a value
+        """
+        Jacky's part:
+        
+        Initializes a card object with a suit and a value
 
         Args:
             suit (str): suit of the card
@@ -25,9 +28,19 @@ class Card:
         
     
     def __repr__(self):
+        """
+        Techniques used:
+        - f-strings containing expressions
+        - magic methods other than init
+        """
         return f"{self.value}{self.suit}"
     
     def __eq__(self, other):
+        """
+        Techniques used:
+        - magic methods other than init
+        - conditional expressions
+        """
         return self.suit == other.suit and self.value == other.value
 
 
@@ -42,6 +55,9 @@ class Deck:
     """
     def __init__(self):
         """Initializes a deck object with a list of card objects
+        
+        Techniques used:
+        - list comprehensions
         
         Side effects: 
             adds 52 card objects to the deck attribute, one for each unique card
@@ -94,25 +110,13 @@ class Player:
         self.decks = [[] for _ in range(5)] # 5 sets of 4 cards
         self.hand_id = 1
         self.deck_ids = [2, 3, 4, 5, 6]
-
-    def swap_with_deck(self, deck_swap = False, deck_num = None):
-        """Daniel's part: Swap hand with a deck only if
-        it's not completed(4 of a kind)."""
-        
-        #Checks if both decks are incomplete, then allows to be swapped
-        if self.has_four_of_a_kind(self.hand) is False and (
-                self.has_four_of_a_kind(self.decks(deck_num)) is False):
-            if deck_swap:
-                    self.hand, self.decks(deck_num)[:] = (self.decks(deck_num), 
-                                                          self.hand)
-        else:
-            #Gives you a message if one of the decks are complete
-            print("""Invalid move: One of 
-                the decks you've chosen are already complete""")
-            
             
     def has_four_of_a_kind(self, deck):
-        """True iff deck has 4 cards and they all share the same value."""
+        """True iff deck has 4 cards and they all share the same value.
+        
+        Techniques used:
+        - set operations
+        """
         # self.completed_decks += 1
         return len(deck) == 4 and len({c.value for c in deck}) == 1
 
@@ -130,7 +134,11 @@ class Player:
             
 
     def update_completed_decks(self):
-        """Re‑count how many 4‑of‑a‑kind piles the player has."""
+        """Re‑count how many 4‑of‑a‑kind piles the player has.
+        
+        Techniques used:
+        - comprehensions or generator expressions
+        """
         all_piles = [self.hand] + self.decks
         self.completed_decks = sum(1 for pile in all_piles if self.has_four_of_a_kind(pile))
         
@@ -156,7 +164,13 @@ class CardGame:
 
     def deal_cards(self):
         """ Deals 6 sets of 4 cards to each player (5 in decks, 1 in hand) 
-        and 1 set of 4 face-up cards to the center."""
+        and 1 set of 4 face-up cards to the center.
+        
+        Techniques used:
+        - list comprehensions
+        
+        
+        """
 
         self.p1.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
         self.p2.decks = [[self.deck.deck.pop() for _ in range(4)] for _ in range(5)]
@@ -169,6 +183,11 @@ class CardGame:
     def center_swap(self, player):
         """
         Tanika's part: 
+        
+        Techniques used:
+        - f-strings containing expressions 
+        
+        
         Swap one card from player's hand with a card from center.
 
         Args:
@@ -203,6 +222,13 @@ class CardGame:
             sys.exit()
             
     def deck_swap(self, player):
+        """
+        Techniques used:
+        - conditional expressions 
+        - f-strings containing expressions
+        - list comprehensions
+        
+        """
         ids = [str(id) for id in player.deck_ids]   
         str_ids = ', '.join(ids)
         choice = input(f"Deck to swap with [{str_ids}]: ")
@@ -228,11 +254,20 @@ class CardGame:
 
     def check_victory(self, player):
         """Ryan's part: Checks if player meets win conditions (each deck is completed)
+        
+        Techniques used:
+        - conditional expressions
         """
         return True if player.completed_decks == 6 else False
         
 
     def save_game(self, current_turn, card_swaps, deck_swaps):
+        """
+        
+        Techniques used:
+        - with statements
+        - f-strings containing expressions
+        """
         filename = input("Enter a name for this save: ")
         with open(filename, 'w') as file:
             file.write(f"Player 1: {self.p1.name}\n")
@@ -249,6 +284,13 @@ class CardGame:
             file.write(f"Player Deck Swaps: {deck_swaps}")
     
     def show_board(self, player):
+        """
+        
+        Techniques used:
+        - f-strings containing expressions
+        - conditional expressions
+        """
+        
         print("-------------------------------")
         print(f"Center: {self.center_cards}\n")
 
@@ -266,7 +308,13 @@ class CardGame:
         
     
     def play_turn(self, player, current_turn, card_swaps=1, deck_swaps=1):
-        """Each turn, player chooses to swap with center or swap deck """
+        """Each turn, player chooses to swap with center or swap deck 
+        
+        Techniques used:
+        - f-strings containing expressions
+        - optional parameters and/or keyword arguments
+        
+        """
         player.swap_card_moves = card_swaps
         player.swap_deck_moves = deck_swaps
         while player.swap_card_moves == 1 or player.swap_deck_moves == 1:
@@ -318,6 +366,9 @@ class CardGame:
     
     def load(self, filename):
         """(Ryan)Loads data from input file into the CardGame variables.
+        
+        - with statements
+        - composition of two custom classes 
         """
         try:
             with open(filename, 'r') as file:
@@ -374,6 +425,13 @@ class CardGame:
            raise ValueError(f"{filename} not a save file")
 
     def load_turn(self, filename):
+        
+        """
+        Techniques used:
+        -  with statements
+        -  f-strings containing expressions
+        
+        """
         try:
             with open(filename, 'r') as file:
                 for line in file:
@@ -402,6 +460,13 @@ class CardGame:
         return card_swaps, deck_swaps
     
 def load_players(filename):
+    """
+    Techniques used:
+    - f-strings containing expressions
+    - with statements
+    - composition of two custom classes 
+    
+    """
     try:
         with open(filename, 'r') as file:
             for line in file:
@@ -417,6 +482,11 @@ def load_players(filename):
     return p1, p2
                 
 def game_brain(args, status):
+    """
+    Techniques used:
+    - composition of two custom classes —
+    - conditional expressions
+    """
     currentTurn = 1
     if status == "New Game":
         p1 = Player(args.player1)
@@ -444,6 +514,13 @@ def game_brain(args, status):
 
         
 def main(args):
+    """
+    
+    Techniques used:
+    - conditional expressions
+    - function composition / program control
+
+    """
     print("******(DANIELS FUN CARD GAME)******")
     print("1.) New Game")
     print("2.) Load Game")
@@ -468,6 +545,10 @@ def main(args):
 
 def parse_args(arglist):
     """Parse command line arguments
+    
+    Techniques used:
+    - the ArgumentParser class from the argparse module
+    - keyword arguments - used in add_argument() as keyword args
     
     Expect two mandatory arguments: 
         - str: name of player 1

@@ -1,0 +1,18 @@
+Player 1: p1
+Player 1 Deck: 2♠,K♣,3♠,4♠
+Player 1 Deck: 2♣,5♣,7♦,K♦
+Player 1 Deck: 2♦,3♦,7♠,4♦
+Player 1 Deck: 7♥,8♠,8♥,5♦
+Player 1 Deck: 9♠,10♠,J♠,Q♠
+Player 1 Hand: 5♠,A♣,6♠,6♥
+Center Cards: 10♥,8♦,3♣,6♣
+Player 2: p2
+Player 2 Deck: 9♣,J♥,9♥,K♠
+Player 2 Deck: 4♥,9♦,10♣,10♦
+Player 2 Deck: 5♥,A♠,6♦,Q♥
+Player 2 Deck: J♣,K♥,2♥,3♥
+Player 2 Deck: Q♣,A♥,J♦,Q♦
+Player 2 Hand: 4♣,7♣,A♦,8♣
+Current Turn: 0
+Player Card Swaps: 1
+Player Deck Swaps: 1

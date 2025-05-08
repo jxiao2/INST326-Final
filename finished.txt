@@ -13,3 +13,6 @@ Player 2 Deck: 8♣,9♦,10♥,J♥
 Player 2 Deck: Q♠,K♦,A♣,Q♦
 Player 2 Deck: Q♥,K♣,A♦,A♥
 Player 2 Hand: 8♦,9♣,10♠,J♠
+Current Turn: 0
+Player Card Swaps: 1
+Player Deck Swaps: 1
