@@ -78,6 +78,8 @@ class Deck:
         # Shuffle 10-20 times
         for _ in range(10, random.randint(11, 20)):
             cut = len(self.deck) // 2 + random.randint(-5, 5)
+            
+            
             left = self.deck[cut:]
             right = self.deck[:cut]
             self.deck.clear()
@@ -99,6 +101,11 @@ class Deck:
 class Player: 
     
     def __init__(self, name):
+        """
+        
+        Techniques used:
+        - list comprehensions
+        """
         self.name = name
         
         self.swap_deck_moves = 1
