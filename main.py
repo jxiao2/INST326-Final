@@ -96,11 +96,11 @@ class Deck:
             
             while left or right:
                 # If both left and right decks have cards, randomly choose one to add back to the deck
+                
                 if left and right: 
-                    if random.randint(1, 2) == 1:
-                        self.deck.append(left.pop())
-                    else: 
-                        self.deck.append(right.pop())
+                    card = left.pop() if random.randint(1, 2) == 1 else right.pop()
+                    self.deck.append(card) 
+                
                 # Otherwise, add the card from whichever deck has remaning cards
                 elif not left: 
                     self.deck.append(right.pop())
