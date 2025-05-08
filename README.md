@@ -41,3 +41,31 @@ git clone https://github.com/jxiao2/INST326-Final.git
 ```bash
 python3 main.py PLAYER1_NAME PLAYER2_NAME
 ```
+
+
+## Attribution Table
+| Method/Function                 | Primary Author | Techniques Demonstrated                          |
+|--------------------------------|----------------|--------------------------------------------------|
+| Deck.__init__                  | Daniel         |                                                  |
+| CardGame.__init__              | Daniel         |                                                  |
+| CardGame.deck_swap             | Daniel         |                                                  |
+| CardGame.play_turn             | Daniel         | Optional parameters / keyword arguments          |
+| game_brain                     | Daniel         | Sequence unpacking                               |
+| Card.__init__                  | Jacky          |                                                  |
+| CardGame.show_board            | Jacky          |                                                  |
+| Deck.shuffle                   | Jacky          | Conditional expressions                          |
+| parse_args                     | Jacky          | ArgumentParser class                             |
+| Player.__init__                | Steph          |                                                  |
+| CardGame.deal_cards            | Steph          |                                                  |
+| main                           | Steph          |                                                  |
+| Player.has_four_of_a_kind      | Steph          | Set operations                                   |
+| Card.__repr__                  | Steph          | Magic methods (other than __init__)              |
+| Player.update_completed_decks  | Tanika         | Generator expressions                            |
+| CardGame.center_swap           | Tanika         | f-strings                                         |
+| Card.__eq__                    | Tanika         |                                                  |
+| CardGame.check_victory         | Tanika         |                                                  |
+| CardGame.save_game             | Ryan           | With statements                                  |
+| CardGame.load                  | Ryan           | Composition of two custom classes                |
+| CardGame.load_turn             | Ryan           |                                                  |
+| CardGame.load_swaps            | Ryan           |                                                  |
+| load_players                   | Ryan           |                                                  |
