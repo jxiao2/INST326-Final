@@ -20,8 +20,11 @@ The first player to complete all six four-of-a-kinds wins!
 ---
 
 ## How to Run the Program
-### 1: Open terminal or command prompt
-
-### 2: Run the program using:
+1: Clone the repository using
+```bash
+git clone https://github.com/jxiao2/INST326-Final.git
+```
+2: Run the program using:
 ```bash
 python3 main.py PLAYER1_NAME PLAYER2_NAME
+```
