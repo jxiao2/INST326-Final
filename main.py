@@ -265,7 +265,7 @@ class CardGame:
 
         
     
-    def play_turn(self, player, current_turn, card_swaps=1, deck_swaps=1)):
+    def play_turn(self, player, current_turn, card_swaps=1, deck_swaps=1):
         """Each turn, player chooses to swap with center or swap deck """
         player.swap_card_moves = card_swaps
         player.swap_deck_moves = deck_swaps
