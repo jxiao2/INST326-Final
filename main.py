@@ -25,7 +25,7 @@ class Card:
         
     
     def __repr__(self):
-        """(Tanika) a (formal) string representation of the card object
+        """(Steph) a (formal) string representation of the card object
         
         Techniques used:
             f-strings containing expressions
@@ -153,7 +153,7 @@ class Player:
         self.deck_ids = [2, 3, 4, 5, 6]
             
     def has_four_of_a_kind(self, deck):
-        """(Jacky) Checks if a deck has 4 cards and they all share the same value.
+        """(Steph) Checks if a deck has 4 cards and they all share the same value.
         
         Args:
             deck (list of Card): a list of card objects
@@ -172,6 +172,9 @@ class Player:
     def update_completed_decks(self):
         """(Tanika) Re‑count how many 4‑of‑a‑kind piles the player has.
         
+        Side effects:
+            sets the number of completed decks to the number of 4-of-a-kind piles
+            in the player's hand and decks
         Techniques used:
             comprehensions or generator expressions
         """
@@ -199,7 +202,7 @@ class CardGame:
     
     """
     def __init__(self, p1, p2):
-        """ (Steph) Initializes a card game object
+        """ (Daniel) Initializes a card game object
         
         Args:
             p1 (Player): the first player
@@ -320,7 +323,7 @@ class CardGame:
         player.update_completed_decks()
 
     def check_victory(self, player):
-        """(Ryan)Checks if player meets win conditions (each deck is completed)
+        """(Tanika) Checks if player meets win conditions (each deck is completed)
         
         Args:
             player (Player): the current player
@@ -367,7 +370,7 @@ class CardGame:
             file.write(f"Player Deck Swaps: {deck_swaps}")
     
     def show_board(self, player):
-        """ (Daniel) Displays the current state of the game board
+        """ (Jacky) Displays the current state of the game board
         
         Args:
             player (Player): the current player
@@ -398,7 +401,7 @@ class CardGame:
         
     
     def play_turn(self, player, current_turn, card_swaps=1, deck_swaps=1):
-        """(Jacky) Each turn, player chooses to swap with center or swap deck 
+        """(Daniel) Each turn, player chooses to swap with center or swap deck 
         
         Args:
             player (Player): the current player
@@ -607,7 +610,7 @@ class CardGame:
         return card_swaps, deck_swaps
     
 def load_players(filename):
-    """ (Steph) Loads the players from the input file.
+    """ (Ryan) Loads the players from the input file.
     
     Args:
         filename (str): the name of the file to load
@@ -640,7 +643,7 @@ def load_players(filename):
     return p1, p2
                 
 def game_brain(args, status):
-    """ (Jacky) The main game loop that runs the game.
+    """ (Daniel) The main game loop that runs the game.
     
     Args:
         args (namespace): the command line arguments
@@ -715,7 +718,7 @@ def main(args):
 
 
 def parse_args(arglist):
-    """Parse command line arguments
+    """(Jacky) Parse command line arguments
     
     Techniques used:
         the ArgumentParser class from the argparse module
