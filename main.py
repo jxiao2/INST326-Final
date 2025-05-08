@@ -531,11 +531,10 @@ def main(args):
     print("******(DANIELS FUN CARD GAME)******")
     print("1.) New Game")
     print("2.) Load Game")
-    print("3.) Rules") # Might remove and just have a text file in the repo with rules
     
     choice = input()
     
-    while choice not in ['1', '2', '3']:
+    while choice not in ['1', '2']:
         print("1.) New Game")
         print("2.) Load Game")
         print("3.) Rules") 
@@ -546,9 +545,6 @@ def main(args):
         game_brain(args, "New Game")
     elif choice == '2': 
         game_brain(args, "Load Game")
-    elif choice == '3': 
-        # Display rules here (Make a function for this)
-        pass
 
 def parse_args(arglist):
     """Parse command line arguments
